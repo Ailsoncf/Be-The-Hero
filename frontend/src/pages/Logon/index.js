@@ -8,16 +8,17 @@ import heroesImg from '../../assets/heroes.png'
 import logoImg from '../../assets/logo.svg'
 
 export default function Logon() {
-  const [id, setId] = useState()
+  const [email, setEmail] = useState()
+  const [password, setPassword] = useState()
   const history = useHistory()
 
   async function handleLogin(e) {
     e.preventDefault()
 
     try {
-      const response = await api.post('sessions', { id })
+      const response = await api.post('signin', { email, password })
 
-      localStorage.setItem('ongId', id)
+      localStorage.setItem('ongId', response.data.id)
       localStorage.setItem('ongName', response.data.name)
 
       history.push('/profile')
@@ -35,9 +36,14 @@ export default function Logon() {
           <h1>Faça seu logon</h1>
 
           <input
-            placeholder="Sua ID"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
+            placeholder="Seu E-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            placeholder="Sua Senha"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <button className="button" type="submit">
             {' '}
