@@ -1,5 +1,6 @@
 const express = require('express')
 
+const authorization = require('./middlewares/auth')
 const OngController = require('./controllers/OngController')
 const IncidentController = require('./controllers/IncidentController')
 const ProfileController = require('./controllers/ProfileController')
@@ -13,7 +14,7 @@ routes.post('/signin', SessionController.signIn)
 routes.get('/ongs', OngController.index)
 routes.post('/ongs', OngController.create)
 
-routes.get('/profile', ProfileController.index)
+routes.get('/profile', authorization, ProfileController.index)
 
 routes.get('/incidents', IncidentController.index)
 routes.post('/incidents', IncidentController.create)
