@@ -14,7 +14,9 @@ routes.post('/signin', SessionController.signIn)
 routes.get('/ongs', OngController.index)
 routes.post('/ongs', OngController.create)
 
-routes.get('/profile', authorization, ProfileController.index)
+routes.get('/profile', ProfileController.index)
+
+routes.use('/incidents', authorization)
 
 routes.get('/incidents', IncidentController.index)
 routes.post('/incidents', IncidentController.create)

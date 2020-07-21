@@ -31,7 +31,7 @@ export default function Register() {
     try {
       const response = await api.post('signup', data)
 
-      alert(`Seu ID de acesso: ${response.data.id}`)
+      alert(`Seu Token de acesso: ${response.data.token}`)
 
       history.push('/')
     } catch (err) {
