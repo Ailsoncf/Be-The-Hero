@@ -35,7 +35,8 @@ module.exports = {
     }
   },
   async signIn(request, response) {
-    const { email, password } = request.body
+    const [, hash] = request.headers.authorization.split(' ')
+    const [email, password] = Buffer.from(hash, 'base64').toString.split(':')
 
     const ong = await connection('ongs').where({ email }).first()
 

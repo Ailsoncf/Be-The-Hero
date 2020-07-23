@@ -9,7 +9,7 @@ const SessionController = require('./controllers/SessionController')
 const routes = express.Router()
 
 routes.post('/signup', SessionController.signUp)
-routes.post('/signin', SessionController.signIn)
+routes.get('/signin', SessionController.signIn)
 
 routes.get('/ongs', OngController.index)
 routes.post('/ongs', OngController.create)
