@@ -58,7 +58,6 @@ module.exports = {
 
       return response.json({ ...ong, token })
     } catch (err) {
-      console.log(err)
       return response
         .status(409)
         .send({ error: 'Authentication error! Please, try again' })
@@ -87,7 +86,7 @@ module.exports = {
       mailer.sendMail(
         {
           to: email,
-          from: 'ailson_cf@yahoo.com.br',
+          from: process.env.EMAIL_SENDER,
           template: 'auth/forgotPass',
           context: { token },
         },
@@ -101,7 +100,6 @@ module.exports = {
         }
       )
     } catch (err) {
-      console.log(err)
       response.status(400).send({ error: 'Error on forgot password' })
     }
   },

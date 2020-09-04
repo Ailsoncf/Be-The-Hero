@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const { secret } = require('../configs/auth.json')
+const { secret } = require('../configs/auth')
 
 function GenerateToken(id) {
   const token = jwt.sign({ id }, secret, {
