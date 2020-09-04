@@ -10,7 +10,7 @@ const routes = express.Router()
 
 routes.post('/signup', SessionController.signUp)
 routes.get('/signin', SessionController.signIn)
-routes.post('/recover_pass', SessionController.passRecover)
+routes.post('/recover_pass', authorization, SessionController.passRecover)
 
 routes.get('/ongs', OngController.index)
 routes.post('/ongs', OngController.create)

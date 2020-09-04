@@ -1,6 +1,0 @@
-module.exports = {
-  host: 'smtp.mailtrap.io',
-  port: 2525,
-  user: 'd920c408f06e8b',
-  pass: '4a698f8d20b516',
-}

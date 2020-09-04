@@ -58,6 +58,7 @@ module.exports = {
 
       return response.json({ ...ong, token })
     } catch (err) {
+      console.log(err)
       return response
         .status(409)
         .send({ error: 'Authentication error! Please, try again' })
