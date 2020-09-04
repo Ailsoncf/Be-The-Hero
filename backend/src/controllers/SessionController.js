@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt')
 const connection = require('../database/connection')
 const GenerateToken = require('../utils/GenerateToken')
+const crypto = require('crypto')
+const mailer = require('../modules/mailer')
 
 module.exports = {
   async signUp(request, response) {
@@ -60,6 +62,47 @@ module.exports = {
       return response
         .status(409)
         .send({ error: 'Authentication error! Please, try again' })
+    }
+  },
+
+  async passRecover(request, response) {
+    const { email } = request.body
+
+    const ong = await connection('ongs').where({ email }).first()
+
+    try {
+      if (!ong) return response.status(404).send({ error: 'ong not found' })
+
+      const token = crypto.randomBytes(20).toString('hex')
+
+      const now = new Date()
+
+      now.setHours(now.getHours() + 1)
+
+      await connection('ongs').where('ongs.id', '=', ong.id).update({
+        passwordResetToken: token,
+        passwordResetExpires: now,
+      })
+
+      mailer.sendMail(
+        {
+          to: email,
+          from: 'ailson_cf@yahoo.com.br',
+          template: 'auth/forgotPass',
+          context: { token },
+        },
+        (err) => {
+          if (err)
+            return response
+              .status(400)
+              .send({ error: 'Cannot send recover email' })
+
+          return response.send({ message: 'Email sent' })
+        }
+      )
+    } catch (err) {
+      console.log(err)
+      response.status(400).send({ error: 'Error on forgot password' })
     }
   },
 }
