@@ -53,12 +53,13 @@ module.exports = {
           .send({ error: 'Invalid Password, try again!' })
 
       ong.password = undefined
+      ong.passwordResetToken = undefined
+      ong.passwordResetExpires = undefined
 
       const token = GenerateToken(ong.id)
 
       return response.json({ ...ong, token })
     } catch (err) {
-      console.log(err)
       return response
         .status(409)
         .send({ error: 'Authentication error! Please, try again' })
@@ -102,6 +103,37 @@ module.exports = {
       )
     } catch (err) {
       response.status(400).send({ error: 'Error on forgot password' })
+    }
+  },
+
+  async passReset(request, response) {
+    const { email, token, password } = request.body
+
+    try {
+      const ong = await connection('ongs')
+        .where({ email })
+        .first()
+        .select('passwordResetToken', 'passwordResetExpires')
+
+      if (!ong) return response.status(400).send({ error: 'ong not found' })
+
+      if (token !== ong.passwordResetToken)
+        return response.status(400).send({ error: 'Token invalid' })
+
+      const now = new Date()
+
+      if (now > ong.passwordResetExpires)
+        return response
+          .status(400)
+          .send({ error: 'Token expired, generate a new one' })
+
+      ong.password = await bcrypt.hash(password, 10)
+
+      await connection('ongs').update(ong)
+
+      response.send()
+    } catch (err) {
+      return response.status(400).send({ error: 'Error on reset password' })
     }
   },
 }
